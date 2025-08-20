@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: "Nata Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+:root {
+    --sizing: .5rem;
+    --rounded: var(--sizing);
+
+    --background: #e5f4ff;
+    --background-foreground: #1d2020;
+
+    --primary: #6cd4d4;
+    --primary-foreground: #275050;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: wavy;
+    line-height: 1rem;
+
+
+    &::after {
+        content: "↗";
+        margin-left: calc(var(--sizing) / 2);
+    }
+}
+
+.app {
+    min-height: 100dvh;
+    padding: calc(var(--sizing) * 2);
+
+    display: flex;
+    gap: calc(var(--sizing) * 4);
+    flex-direction: column;
+
+    background-image: url(./katie-mukhina-sTfhU9YOrhU-unsplash.jpg);
+    background-color: var(--background);
+    background-size: cover;
+    background-position: center;
+
+    color: var(--background-foreground);
+}
+
+.app-header,
+.app-footer {
+    width: 100%;
+    padding: calc(var(--sizing) * 2);
+
+    display: flex;
+    justify-content: center;
+
+    font-weight: 600;
+
+    background-color: var(--primary-foreground);
+    color: var(--primary);
+
+    border: none;
+    border-radius: calc(var(--rounded) * 2);
+}
+
+.app-content {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    gap: calc(var(--sizing) * 4);
+}
+
+.app-navigation {
+    padding-top: var(--sizing);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sizing);
+}
+
+.app-navigation>.app-navigation--link {
+    width: calc(var(--sizing) * 6);
+    height: calc(var(--sizing) * 6);
+
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: calc(var(--rounded) * 2);
+
+    &::after {
+        content: none;
+    }
+}
+
+.app-navigation>.app-navigation--link.active {
+    border: double currentColor calc(var(--sizing) / 2);
+    border-radius: calc(var(--rounded) * 2);
+}
+
+.app-main {
+    width: 100%;
+
+    --padding-x: calc(var(--sizing) * 4);
+    --padding-y: calc(var(--sizing) * 2);
+
+    padding-left: var(--padding-x);
+    padding-right: var(--padding-x);
+    padding-top: var(--padding-y);
+    padding-bottom: var(--padding-y);
+
+    border: none;
+    border-radius: calc(var(--rounded) * 2);
+
+    background-color: var(--background);
+    color: var(--background-foreground);
+}
