@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
  
+import database.session
+
+database.session
+
 app = FastAPI()
  
 @app.get("/")
