@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
  
 import database.session
 
-database.session.create
+database.session
 
 app = FastAPI()
  

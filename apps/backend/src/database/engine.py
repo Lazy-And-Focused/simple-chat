@@ -4,7 +4,7 @@ from .schemas import AuthBase, MessageBase, UserBase, RoomBase
 from .database import Base
 from .constants import DATABASE_URL
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL)
 
 def createTables() -> None:
 	Base.metadata.create_all(engine)

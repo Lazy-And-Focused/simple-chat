@@ -1,6 +1,6 @@
-from typing import Any
+from typing import TypeVar, Generic, Any
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select 
+from sqlalchemy import Sequence, select 
 
 from .schemas import UserBase
 from .engine import engine, createTables
@@ -10,33 +10,80 @@ createTables()
 Session = sessionmaker(engine)
 session = Session()
 
-def create(data: Any):
-    return session.add(data)
+T = TypeVar("T")
 
-def update(data: Any):
-    return session.merge(data)
+class Database(Generic[T]):
+    _base: type[T]
 
-def getById(id: int, base: Any):
-    statement = select(base).where(base.id == id)
-    return session.scalars(statement).one()
+    def __init__(self, base: type[T]) -> None:
+        super().__init__()
+        
+        self._base = base
 
-def getByKey(key: str, data: Any, base: Any):
-    statement = select(base).where(base[key] == data)
-    return session.scalars(statement).all()
+    def create(self, data: T) -> None:
+        try:
+            created = session.add(data)
+            session.commit()
 
-def delete(id: int, base: Any):
-    return session.delete(getById(id, base))
+            return created
+        except:
+            session.rollback()
+            session.commit()
+            raise
+
+
+    def update(self, data: T):
+        try:
+            data = session.merge(data)
+            session.commit()
+
+            return data
+        except:
+            session.rollback()
+            session.commit()
+            raise
+
+    def getById(self, id: int) -> T:
+        try:
+            statement = select(self._base).where(self._base.id == id) # type: ignore
+            data = session.scalars(statement).one() # type: ignore
+            session.commit()
+
+            return data
+        except:
+            session.rollback()
+            session.commit()
+            raise
+
+    def getByKey(self, key: str, data: Any) -> Sequence[T]:
+        try:
+            statement = select(self._base).where(eval(f"self._base.{key}") == data) #type: ignore
+            getted = session.scalars(statement).all() #type: ignore
+            session.commit()
+
+            return getted #type: ignore
+        except:
+            session.rollback()
+            session.commit()
+            raise
+
+    def delete(self, id: int):
+        try:
+            data = session.delete(self.getById(id))
+            session.commit()
+
+            return data
+        except:
+            session.rollback()
+            session.commit()
+            raise
+            
 
 try:
-    # create(UserBase(user_name="fockusty"))
-    fockusty = getById(1, UserBase)
-    print(fockusty)
-
-    fockusty.name = "fockusty"
-
-    update(fockusty)
-
-    print(getById(1, UserBase))
+    Database(UserBase)
+    # Database(UserBase).create(UserBase(user_name="fockusty"))
+    # print(Database(UserBase).getByKey("user_name", "fockusty"))
+    pass
 except:
     session.rollback()
     raise
