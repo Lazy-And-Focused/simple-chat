@@ -2,7 +2,6 @@ from typing import TypeVar, Generic, Any
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Sequence, select 
 
-from .schemas import UserBase
 from .engine import engine, createTables
 
 createTables()
@@ -77,15 +76,3 @@ class Database(Generic[T]):
             session.rollback()
             session.commit()
             raise
-            
-
-try:
-    Database(UserBase)
-    # Database(UserBase).create(UserBase(user_name="fockusty"))
-    # print(Database(UserBase).getByKey("user_name", "fockusty"))
-    pass
-except:
-    session.rollback()
-    raise
-else:
-    session.commit()
