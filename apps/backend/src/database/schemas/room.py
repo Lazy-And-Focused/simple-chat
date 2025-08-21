@@ -13,3 +13,10 @@ class RoomBase(Base):
 	name: Mapped[str] = mapped_column(String(4096))
 	icon: Mapped[Optional[str]] = mapped_column(String())
 	messages: Mapped[str] = mapped_column(String())
+
+	def __repr__(self) -> str:
+		return f"""
+RoomBase:\n{
+"\n".join([f"{key}: {eval(f"self.{key}")}" for key in ["id", "name", "icon", "messages"]])
+}
+"""

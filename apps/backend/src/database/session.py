@@ -17,13 +17,15 @@ def update(data: Any):
     return session.merge(data)
 
 def getById(id: int, base: Any):
-    statement = select(base).where(base.id == id) # type: ignore
-    data = session.scalars(statement).one()
+    statement = select(base).where(base.id == id)
+    return session.scalars(statement).one()
 
-    return data
+def getByKey(key: str, data: Any, base: Any):
+    statement = select(base).where(base[key] == data)
+    return session.scalars(statement).all()
 
-# def delete(id: str):
-
+def delete(id: int, base: Any):
+    return session.delete(getById(id, base))
 
 try:
     # create(UserBase(user_name="fockusty"))
