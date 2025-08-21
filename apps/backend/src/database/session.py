@@ -29,6 +29,12 @@ def delete(id: int, base: Any):
 
 try:
     # create(UserBase(user_name="fockusty"))
+    fockusty = getById(1, UserBase)
+    print(fockusty)
+
+    fockusty.name = "fockusty"
+
+    update(fockusty)
 
     print(getById(1, UserBase))
 except:
