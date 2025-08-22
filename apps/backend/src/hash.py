@@ -26,12 +26,12 @@ def resolveHash(hash: str):
 
     return b"".fromhex(salt), data
 
-def isHashEquals(hashed: str, data: str):
+def isHashEquals(data: str, hashed: str):
     salt, _ = resolveHash(hashed)
     
     return hashed == hashFromBytes(salt, data)
 
-def isKeyEquals(key: str, hashed: str):
+def isKeysEquals(key: str, hashed: str):
     salt, _ = resolveHash(hashed)
 
     if salt == createHash(key):
@@ -40,7 +40,7 @@ def isKeyEquals(key: str, hashed: str):
         return False
     
 def changeHash(key: str, data: str, hashed: str):
-    if (not isKeyEquals(key, hashed)): return False
+    if (not isKeysEquals(key, hashed)): return False
      
     salt, _ = resolveHash(hashed)
 
@@ -57,8 +57,8 @@ def main():
     password = hash("someemail@some.example", "my cool password")
     
     print("password:", password)
-    print("isHashEquals:", isHashEquals(password, "my cool password"))
-    print("isKeyEquals:", isKeyEquals("someemail@some.example", password))
+    print("isHashEquals:", isHashEquals("my cool password", password))
+    print("isKeysEquals:", isKeysEquals("someemail@some.example", password))
     print("changeHash:", changeHash("someemail@some.example", "my new cool password", password))
     print("changeKey:", changeKey("123", "someemail@some.example", "my cool password", password))
 
