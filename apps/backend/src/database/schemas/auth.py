@@ -10,6 +10,7 @@ class AuthBase(Base):
 
 	id: Mapped[int] = mapped_column(unique=True, primary_key=True)
 	email: Mapped[str] = mapped_column(String(), unique=True)
+	access_token: Mapped[str] = mapped_column(String())
 	password: Mapped[str] = mapped_column(String())
 	user_id: Mapped[str] = mapped_column(String())
 

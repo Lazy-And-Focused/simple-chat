@@ -51,7 +51,8 @@ async def auth(req: Request):
   Database(AuthBase).create(AuthBase(
     user_id=databaseUser.id,
     email=email,
-    password=password
+    password=password,
+    access_token=hash.createHash(f"{email}{password}{databaseUser.username}{databaseUser.id}").hex()
   ))
 
   code = int(time.time())
@@ -75,4 +76,9 @@ def getAuth(req: Request):
   if len(auth) == 0:
     return JSONResponse("Bad code", 400)
 
-  return auth[0]
+  return {
+    "id": f"{auth[0].id}",
+    "access_token": f"{auth[0].access_token}",
+    "user_id": f"{auth[0].user_id}",
+    "email": f"{auth[0].email}"
+  }
