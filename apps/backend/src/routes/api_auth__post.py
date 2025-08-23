@@ -6,6 +6,7 @@ from database.session import Database
 
 from .globals import codes
 
+import tokens
 import hash
 import time
 
@@ -35,13 +36,13 @@ def main(app: FastAPI, _):
             name=(user["name"] if "name" in user else "")
         )) # type: ignore
         databaseUser = Database(UserBase).getByKey("username", user["username"])[0]
-        hashData = hash.createHash(email).hex()
+        hashData, access_token = tokens.generateToken(databaseUser.id, email, password)
         Database(AuthBase).create(AuthBase(
             user_id=databaseUser.id,
             email=email,
             password=password,
             hash=hashData,
-            access_token=f"{hashData}:{hash.createHash(f"{email}{password}{databaseUser.username}{databaseUser.id}").hex()}"
+            access_token=access_token
         ))
 
         code = int(time.time())
