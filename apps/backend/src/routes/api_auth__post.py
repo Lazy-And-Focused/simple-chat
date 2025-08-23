@@ -35,11 +35,13 @@ def main(app: FastAPI):
             name=(user["name"] if "name" in user else "")
         )) # type: ignore
         databaseUser = Database(UserBase).getByKey("username", user["username"])[0]
+        hashData = hash.createHash(email).hex()
         Database(AuthBase).create(AuthBase(
             user_id=databaseUser.id,
             email=email,
             password=password,
-            access_token=hash.createHash(f"{email}{password}{databaseUser.username}{databaseUser.id}").hex()
+            hash=hashData,
+            access_token=f"{hashData}:{hash.createHash(f"{email}{password}{databaseUser.username}{databaseUser.id}").hex()}"
         ))
 
         code = int(time.time())
