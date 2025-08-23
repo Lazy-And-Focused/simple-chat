@@ -1,21 +1,14 @@
-from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from database.schemas import AuthBase, UserBase
 from database.session import Database
-from pydantic import BaseModel
 
 from .globals import codes
 
 import hash
 import time
 
-class UserDto(BaseModel):
-  username: str
-  name: Optional[str]
-  avatar_url: Optional[str]
-  
 def main(app: FastAPI):
     @app.post("/api/auth")
     async def execute(req: Request):
