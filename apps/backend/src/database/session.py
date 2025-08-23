@@ -1,6 +1,6 @@
-from typing import TypeVar, Generic, Any
+from typing import TypeVar, Generic, Any, Sequence
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Sequence, select 
+from sqlalchemy import select 
 
 from .engine import engine, createTables
 
@@ -46,24 +46,18 @@ class Database(Generic[T]):
         try:
             statement = select(self._base).where(self._base.id == id) # type: ignore
             data = session.scalars(statement).one() # type: ignore
-            session.commit()
 
             return data
         except:
-            session.rollback()
-            session.commit()
             raise
 
     def getByKey(self, key: str, data: Any) -> Sequence[T]:
         try:
             statement = select(self._base).where(eval(f"self._base.{key}") == data) #type: ignore
-            getted = session.scalars(statement).all() #type: ignore
-            session.commit()
-
-            return getted #type: ignore
+            getted = session.scalars(statement).all()
+            
+            return getted
         except:
-            session.rollback()
-            session.commit()
             raise
 
     def delete(self, id: int):

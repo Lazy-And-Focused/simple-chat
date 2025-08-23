@@ -8,10 +8,10 @@ from ..database import Base
 class AuthBase(Base):
 	__tablename__ = "auth"
 
-	id: Mapped[int] = mapped_column(String(), primary_key=True)
-	user_id: Mapped[str] = mapped_column(String())
+	id: Mapped[int] = mapped_column(unique=True, primary_key=True)
+	email: Mapped[str] = mapped_column(String(), unique=True)
 	password: Mapped[str] = mapped_column(String())
-	email: Mapped[str] = mapped_column(String(), primary_key=True)
+	user_id: Mapped[str] = mapped_column(String())
 
 	def __repr__(self) -> str:
 		return f"""
