@@ -8,7 +8,7 @@ from .globals import codes
 
 import time
 
-def main(app: FastAPI):
+def main(app: FastAPI, _):
     @app.get("/api/auth")
     def execute(req: Request):
         code = req.query_params.get("code")

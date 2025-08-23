@@ -9,7 +9,7 @@ from .globals import codes
 import hash
 import time
 
-def main(app: FastAPI):
+def main(app: FastAPI, _):
     @app.post("/api/auth")
     async def execute(req: Request):
         key = req.headers.get("key")

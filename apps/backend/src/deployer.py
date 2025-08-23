@@ -10,8 +10,8 @@ ROUTES_DIR: Final[str] = "routes"
 ROUTES = list(filter(lambda x: x.endswith(".py"), os.listdir(ROUTES_DIR)))
 ROUTE_REX_EX = r"(?:.*_?)*__.*"
 
-def main() -> dict[str, Callable[[Any], Any]]:
-    modules: dict[str, Callable[[Any], Any]] = {}
+def main() -> dict[str, Callable[[Any, Any], Any]]:
+    modules: dict[str, Callable[[Any, Any], Any]] = {}
 
     for route in ROUTES:
         data, _ = route.split(".")
@@ -29,7 +29,7 @@ def register(app: FastAPI):
     routes = main()
 
     for route in routes:
-        routes[route](app)
+        routes[route](app, routes)
 
 if __name__ == "__main__":
     routes = main()

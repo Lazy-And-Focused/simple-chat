@@ -6,7 +6,7 @@ from database.session import Database
 
 from .tokens import validate, fetch
 
-def main(app: FastAPI):
+def main(app: FastAPI, _):
     @app.get("/api/user")
     def execute(request: Request):
         token = request.headers.get("access_token")
