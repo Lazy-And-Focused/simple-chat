@@ -4,13 +4,14 @@ from fastapi.responses import JSONResponse
 from database.schemas import AuthBase
 from database.session import Database
 
-from tokens import validate, fetch, generateToken
+from .tokens import validate, fetch, generateToken
+
 import hash
 
 def main(app: FastAPI, _):
     @app.put("/api/auth")
     async def execute(req: Request):
-        token = req.headers.get("access_token")
+        token = req.headers.get("Authorization")
         tokenValided = validate(token)
         
         if not tokenValided or not token:

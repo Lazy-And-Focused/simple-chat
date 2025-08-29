@@ -5,8 +5,8 @@ from database.schemas import AuthBase, UserBase
 from database.session import Database
 
 from .globals import codes
+from . import tokens
 
-import tokens
 import hash
 import time
 
