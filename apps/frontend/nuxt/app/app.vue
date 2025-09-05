@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import Main from "./main.vue";
+import Header from "~/components/header.vue";
+import Main from "~/components/main.vue";
+import Footer from "~/components/footer.vue";
 </script>
 
 <template>
   <div class="app">
     <NuxtRouteAnnouncer />
-    <header class="app-header">SimpleChat</header>
+
+    <Header />
 
     <div class="app-content">
       <nav class="app-navigation">
@@ -16,26 +19,11 @@ import Main from "./main.vue";
       <Main />
     </div>
 
-    <footer class="app-footer">
-      <a href="https://laf-team.ru" target="_blank" rel="noopener noreferrer">
-        Lazy And Focused</a
-      >
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <style scoped>
-a {
-  color: var(--primary);
-  text-decoration: wavy;
-  line-height: 1rem;
-
-  &::after {
-    content: "↗";
-    margin-left: calc(var(--sizing) / 2);
-  }
-}
-
 .app {
   min-height: 100dvh;
   padding: calc(var(--sizing) * 2);
@@ -50,23 +38,6 @@ a {
   background-position: center;
 
   color: var(--background-foreground);
-}
-
-.app-header,
-.app-footer {
-  width: 100%;
-  padding: calc(var(--sizing) * 2);
-
-  display: flex;
-  justify-content: center;
-
-  font-weight: 600;
-
-  background-color: var(--primary-foreground);
-  color: var(--primary);
-
-  border: none;
-  border-radius: calc(var(--rounded) * 2);
 }
 
 .app-content {

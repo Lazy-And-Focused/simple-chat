@@ -21,3 +21,15 @@
   --primary: #6cd4d4;
   --primary-foreground: #275050;
 }
+
+
+a {
+  color: var(--primary);
+  text-decoration: wavy;
+  line-height: 1rem;
+
+  &::after {
+    content: "↗";
+    margin-left: calc(var(--sizing) / 2);
+  }
+}

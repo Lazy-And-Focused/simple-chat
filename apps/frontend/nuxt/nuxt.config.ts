@@ -4,7 +4,4 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/fonts", "@nuxt/image"],
   css: ["~/assets/css/main.css"],
-  nitro: {
-    prerender: { routes: ["/_ipx//backgrounds/default.jpg"] },
-  },
 });
