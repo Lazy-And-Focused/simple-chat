@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  font-family: "Nata Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --sizing: 0.5rem;
+  --rounded: var(--sizing);
+
+  --background: #e5f4ff;
+  --background-foreground: #1d2020;
+
+  --primary: #6cd4d4;
+  --primary-foreground: #275050;
+}
+
+
+a {
+  color: var(--primary);
+  text-decoration: wavy;
+  line-height: 1rem;
+
+  &::after {
+    content: "↗";
+    margin-left: calc(var(--sizing) / 2);
+  }
+}
