@@ -35,7 +35,7 @@ manager = ConnectionManager()
 def main(app: FastAPI, _):
     @app.websocket("/api/rooms/{room_id}")
     async def execute(websocket: WebSocket, room_id: int):
-        token = websocket.headers.get("Authorization")
+        token = websocket.query_params.get("authorization")
         tokenValided = validate(token)
 
         if not tokenValided or not token:
@@ -45,15 +45,13 @@ def main(app: FastAPI, _):
 
         await manager.connect(websocket, room_id, auth.id)
         
-        return
-
         try:
             while True:
-                data = await websocket.receive_text()
-                await manager.send_personal_message(f"You wrote: {data}", websocket)
-                await manager.broadcast(f"Client #{websocket.client_state.name} says: {data}")
+                data = await websocket.receive_json()
+                print(data)
+                # await manager.broadcast(f"Client #{websocket.client_state.name} says: {data}")
         except:
-            manager.disconnect(websocket)
-            await manager.broadcast(f"Client #{websocket.client_state.name} left the chat")
+            manager.disconnect(room_id, auth.id)
+            await manager.broadcast(f"Client #{websocket.client_state.name} left the chat", room_id, auth.id)
 
     return execute

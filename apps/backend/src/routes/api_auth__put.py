@@ -11,7 +11,7 @@ import hash
 def main(app: FastAPI, _):
     @app.put("/api/auth")
     async def execute(req: Request):
-        token = req.headers.get("Authorization")
+        token = req.headers.get("authorization")
         tokenValided = validate(token)
         
         if not tokenValided or not token:

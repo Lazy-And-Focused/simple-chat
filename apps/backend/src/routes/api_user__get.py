@@ -9,7 +9,7 @@ from .tokens import validate, fetch
 def main(app: FastAPI, _):
     @app.get("/api/user")
     def execute(request: Request):
-        token = request.headers.get("Authorization")
+        token = request.headers.get("authorization")
         tokenValided = validate(token)
         
         if not tokenValided or not token:
