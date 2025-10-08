@@ -1,6 +1,7 @@
 'use client'
 
 import type { User } from "types/user.type";
+import type { Message } from "types/message.type";
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,11 +17,7 @@ const Page = () => {
   const [ loaded, setLoaded ] = useState<boolean>(false);
   const [ connected, setConnect ] = useState<boolean>(false);
 
-  const [ messages, setMessages ] = useState<{
-    author_id: number,
-    author: string,
-    text: string
-  }[]>([]);
+  const [ messages, setMessages ] = useState<Message[]>([]);
 
   const { id } = useParams<{ id: string }>();
 
