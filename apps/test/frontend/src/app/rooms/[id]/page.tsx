@@ -8,11 +8,19 @@ import { useEffect, useState } from "react";
 import { getToken } from "api/get-token";
 import { getUser } from "api/get-user";
 
+import styles from "./page.module.css";
+
 const Page = () => {
   const [ socket, setSocket ] = useState<WebSocket|null>(null);
   const [ user, setUser ] = useState<User|null>(null);
   const [ loaded, setLoaded ] = useState<boolean>(false);
   const [ connected, setConnect ] = useState<boolean>(false);
+
+  const [ messages, setMessages ] = useState<{
+    author_id: number,
+    author: string,
+    text: string
+  }[]>([]);
 
   const { id } = useParams<{ id: string }>();
 
@@ -65,8 +73,17 @@ const Page = () => {
   }
 
   return (
-    <div className="page">
-      Привет, {user.username}, Вы подключены
+    <div className={styles.main}>
+      <span>Привет, {user.username}, Вы подключены</span>
+      <div className={styles.chat}>
+        {
+          messages.map(message => (
+            <div className={`${styles.message} ${styles["message_" + `${message.author_id === user.id}`]}`}>
+              <span>{message.author}: {message.text}</span>
+            </div>
+          ))
+        }
+      </div>
     </div>
   )
 };
