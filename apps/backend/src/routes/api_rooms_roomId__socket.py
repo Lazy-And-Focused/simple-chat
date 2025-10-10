@@ -3,7 +3,8 @@ from typing import Dict
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import JSONResponse
 
-from .tokens import validate, fetch
+from .tokens import validate, fetchUser
+from database.schemas import UserBase
 
 class ConnectionManager:
     def __init__(self):
@@ -21,12 +22,13 @@ class ConnectionManager:
             if not self.active_connections[room_id]:
                 del self.active_connections[room_id]
 
-    async def broadcast(self, message: str, room_id: int, sender_id: int):
+    async def broadcast(self, message: str, room_id: int, user: UserBase):
         if room_id in self.active_connections:
             for user_id, connection in self.active_connections[room_id].items():
-                message_with_class: Dict[str, str|bool] = {
+                message_with_class: Dict[str, str|int] = {
                     "text": message,
-                    "is_self": user_id == sender_id
+                    "author_id": user.id,
+                    "author": user.username,
                 }
                 await connection.send_json(message_with_class)
 
@@ -41,17 +43,18 @@ def main(app: FastAPI, _):
         if not tokenValided or not token:
             return JSONResponse("False token", 403)
 
-        auth = fetch(token)
+        _auth, user = fetchUser(token)
 
-        await manager.connect(websocket, room_id, auth.id)
+        await manager.connect(websocket, room_id, user.id)
         
         try:
+            await manager.broadcast(f"Hello, i'm join to chat", room_id, user)
+
             while True:
                 data = await websocket.receive_json()
-                print(data)
-                # await manager.broadcast(f"Client #{websocket.client_state.name} says: {data}")
+                await manager.broadcast(f"{data["text"]}", room_id, user)
         except:
-            manager.disconnect(room_id, auth.id)
-            await manager.broadcast(f"Client #{websocket.client_state.name} left the chat", room_id, auth.id)
+            manager.disconnect(room_id, user.id)
+            await manager.broadcast(f"Goodbye, i'm left from chat", room_id, user)
 
     return execute

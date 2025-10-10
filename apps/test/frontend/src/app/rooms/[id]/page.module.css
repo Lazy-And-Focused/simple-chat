@@ -1,0 +1,26 @@
+.input {
+  display: flex;
+  flex-direction: column;
+
+  width: max-content;
+
+  gap: 0.25em;
+}
+
+.input * {
+  width: 100%;
+}
+
+.chat_window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.alien_message {
+  text-align: end;
+}
+
+.self_message {
+  text-align: left;
+}
