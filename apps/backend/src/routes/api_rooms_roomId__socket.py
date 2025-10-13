@@ -24,7 +24,7 @@ class ConnectionManager:
 
     async def broadcast(self, message: str, room_id: int, user: UserBase):
         if room_id in self.active_connections:
-            for user_id, connection in self.active_connections[room_id].items():
+            for _, connection in self.active_connections[room_id].items():
                 message_with_class: Dict[str, str|int] = {
                     "text": message,
                     "author_id": user.id,
@@ -43,7 +43,7 @@ def main(app: FastAPI, _):
         if not tokenValided or not token:
             return JSONResponse("False token", 403)
 
-        _auth, user = fetchUser(token)
+        _, user = fetchUser(token)
 
         await manager.connect(websocket, room_id, user.id)
         
