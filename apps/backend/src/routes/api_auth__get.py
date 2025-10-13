@@ -5,9 +5,47 @@ from database.schemas import AuthBase
 from database.session import Database
 
 from .globals import codes
-from .tokens import validate, fetchUser
+from .tokens import validate, fetch
 
+import hash
 import time
+
+def authenticateByPassword(req: Request):
+    key = req.headers.get("key")
+    email = req.headers.get("email")
+    password = req.headers.get("password")
+
+    if not email or not password:
+        return JSONResponse("Not email or password", status_code=400)
+
+    password = hash.hash(key or email, password)
+    auth = Database(AuthBase).getByKey("email", email)
+
+    if auth[0].password != password:
+        return JSONResponse("Invalid password", status_code=403)
+    
+    return {
+        "id": f"{auth[0].id}",
+        "access_token": f"{auth[0].access_token}",
+        "user_id": f"{auth[0].user_id}",
+        "email": f"{auth[0].email}"
+    }
+
+def authenticate(req: Request):
+    token = req.headers.get("authorization")
+    tokenValided = validate(token)
+    
+    if not tokenValided or not token:
+        return authenticateByPassword(req)
+        
+    auth = fetch(token)  
+    
+    return {
+        "id": f"{auth.id}",
+        "access_token": f"{auth.access_token}",
+        "user_id": f"{auth.user_id}",
+        "email": f"{auth.email}"
+    }
 
 def main(app: FastAPI, _):
     @app.get("/api/auth")
@@ -15,18 +53,10 @@ def main(app: FastAPI, _):
         code = req.query_params.get("code")
 
         if not code:
-            token = req.headers.get("authorization")
-            tokenValided = validate(token)
-            
-            if not tokenValided or not token:
-                return JSONResponse("False token", 403)
-        
-            _, user = fetchUser(token)  
-            
-            return user
-        
+            return authenticate(req)
+
         if not code in codes:
-            return JSONResponse("Bad code", 400)
+            return authenticate(req)
 
         email, expiresTime = codes[code]
 

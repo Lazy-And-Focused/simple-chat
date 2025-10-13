@@ -5,7 +5,7 @@ import { cookies } from "next/headers"
 export const getToken = async (): Promise<string|false> => {
   const cookie = await cookies();
   
-  const value = cookie.get("auth")?.value
+  const value = cookie.get("token")?.value
   
   if (!value) {
     return false;

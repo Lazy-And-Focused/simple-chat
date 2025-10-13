@@ -14,6 +14,19 @@ export const authenticate = async ({
   username: string
 }): Promise<Auth> => {
   const cookie = await cookies();
+  const response = await fetch("http://localhost:8000/api/auth", {
+    method: "GET",
+    headers: {
+      email, password
+    }
+  });
+
+  if (response.status === 200) {
+    const auth = await response.json();
+
+    cookie.set("token", JSON.stringify(auth));
+    return auth;
+  }
 
   const code = await fetch("http://localhost:8000/api/auth", {
     method: "POST",
@@ -27,7 +40,7 @@ export const authenticate = async ({
     method: "GET"
   }).then(data => data.json());
 
-  cookie.set("auth", JSON.stringify(auth));
+  cookie.set("token", JSON.stringify(auth));
 
   return auth;
 }
