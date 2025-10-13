@@ -5,6 +5,7 @@ from database.schemas import AuthBase
 from database.session import Database
 
 from .globals import codes
+from .tokens import validate, fetchUser
 
 import time
 
@@ -14,7 +15,15 @@ def main(app: FastAPI, _):
         code = req.query_params.get("code")
 
         if not code:
-            return JSONResponse("Forbidenn", 403)
+            token = req.headers.get("authorization")
+            tokenValided = validate(token)
+            
+            if not tokenValided or not token:
+                return JSONResponse("False token", 403)
+        
+            _, user = fetchUser(token)  
+            
+            return user
         
         if not code in codes:
             return JSONResponse("Bad code", 400)

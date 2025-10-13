@@ -9,7 +9,7 @@ def fetch(token: str):
     
     return data[0]
 
-def fetchUser(token: str):
+def fetchUser(token: str) -> tuple[AuthBase, UserBase]:
     auth = fetch(token)
     user = Database(UserBase).getById(auth.user_id)
 

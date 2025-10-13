@@ -1,10 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from database.schemas import UserBase
-from database.session import Database
-
-from .tokens import validate, fetch
+from .tokens import validate, fetchUser
 
 def main(app: FastAPI, _):
     @app.get("/api/user")
@@ -15,8 +12,7 @@ def main(app: FastAPI, _):
         if not tokenValided or not token:
             return JSONResponse("False token", 403)
 
-        auth = fetch(token)  
-        user = Database(UserBase).getById(auth.user_id)
+        _, user = fetchUser(token)  
 
         return user
     
