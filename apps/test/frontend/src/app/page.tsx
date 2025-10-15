@@ -1,8 +1,11 @@
 'use client'
 
-import styles from "./page.module.css";
 import { useRef, useState } from "react";
+
 import { authenticate } from "api/authenticate";
+import { CHOOSE_ROOM_PATH } from "api/constants";
+
+import styles from "./page.module.css";
 
 export default function Home() {
   const [ actived, setActive ] = useState<boolean>(false);
@@ -39,7 +42,7 @@ export default function Home() {
             };
 
             authenticate(data).then(() => {
-              location.href = "/choose-room";
+              location.href = CHOOSE_ROOM_PATH;
             });
           }}>
             <input className="auth" name="email" placeholder="Введите свою почту" type="email" />
