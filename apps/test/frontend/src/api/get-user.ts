@@ -9,7 +9,7 @@ export const getUser = cache(async (token: string|null|false): Promise<User|null
   const cookie = await cookies();
   
   if (!token) {
-    const user = cookie.get("user")?.value;
+    const user = cookie.get(process.env.COOKIE_USER_NAME!)?.value;
     
     if (!user) {
       return null
@@ -18,7 +18,7 @@ export const getUser = cache(async (token: string|null|false): Promise<User|null
     return JSON.parse(user);
   };
 
-  const user = await fetch("http://localhost:8000/api/user", {
+  const user = await fetch(process.env.API_ENV + "/api/user", {
     method: "GET",
     headers: {
       authorization: token

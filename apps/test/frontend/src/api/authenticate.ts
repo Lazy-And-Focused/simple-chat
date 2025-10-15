@@ -14,7 +14,7 @@ export const authenticate = async ({
   username: string
 }): Promise<Auth> => {
   const cookie = await cookies();
-  const response = await fetch("http://localhost:8000/api/auth", {
+  const response = await fetch(process.env.API_ENV + "/api/auth", {
     method: "GET",
     headers: {
       email, password
@@ -24,11 +24,11 @@ export const authenticate = async ({
   if (response.status === 200) {
     const auth = await response.json();
 
-    cookie.set("token", JSON.stringify(auth));
+    cookie.set(process.env.COOKIE_TOKEN_NAME!, JSON.stringify(auth));
     return auth;
   }
 
-  const code = await fetch("http://localhost:8000/api/auth", {
+  const code = await fetch(process.env.API_ENV + "/api/auth", {
     method: "POST",
     headers: {
       email, password
@@ -36,11 +36,17 @@ export const authenticate = async ({
     body: JSON.stringify({username})
   }).then(data => data.json());
 
-  const auth = await fetch("http://localhost:8000/api/auth?code="+code, {
+  const authResponse = await fetch(process.env.API_ENV + "/api/auth?code="+code, {
     method: "GET"
-  }).then(data => data.json());
+  });
 
-  cookie.set("token", JSON.stringify(auth));
+  if (authResponse.status !== 200) {
+    throw new Error(authResponse.statusText);
+  }
+
+  const auth = await authResponse.json();
+
+  cookie.set(process.env.COOKIE_TOKEN_NAME!, JSON.stringify(auth));
 
   return auth;
 }
