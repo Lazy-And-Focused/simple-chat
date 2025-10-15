@@ -84,14 +84,28 @@ const Page = () => {
     )
   }
 
+  const onSubmit = () => {
+    if (!socket || !textRef.current) {
+      return;
+    }
+
+    socket.send(JSON.stringify({
+      text: textRef.current.value,
+      author: user.username,
+      author_id: user.id
+    }));
+
+    textRef.current.value = "";
+  }
+
   return (
     <div className={styles.main}>
       <span>Привет, {user.username}, Вы подключены</span>
       <div className={styles.chat_window}>
         <div className={styles.chat}>
           {
-            messages.map((message, i) => (
-              <div key={i} className={[
+            messages.map((message, index) => (
+              <div key={index} className={[
                 styles.message,
                 styles[resolveClassName(message.author_id, user.id)]
               ].join(" ")}>
@@ -100,23 +114,9 @@ const Page = () => {
             ))
           }
         </div>
-        <form className={"message " + styles.input} onSubmit={(e) => {
-          e.preventDefault();
-
-          if (!socket || !textRef.current) {
-            return;
-          }
-
-          socket.send(JSON.stringify({
-            text: textRef.current.value,
-            author: user.username,
-            author_id: user.id
-          }));
-
-          textRef.current.value = "";
-        }}>
-          <textarea ref={textRef} placeholder="Введите сообщение" name="message"></textarea>
-          <input type="submit" value="Готово" />
+        <form className={"message " + styles.input}>
+          <textarea ref={textRef} placeholder="Введите сообщение" name="message" />
+          <button onClick={onSubmit} >Готово</button>
         </form>
       </div>
     </div>
