@@ -6,9 +6,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { getToken } from "api/get-token";
 import { getUser } from "api/get-user";
+import { getRoomPath } from "api/constants";
 
 import styles from "./page.module.css";
-import { getRoomPath } from "api/constants";
 
 const Page = () => {
   const [ user, setUser ] = useState<User|null>(null);
@@ -37,22 +37,21 @@ const Page = () => {
       </div>
     )
   }
+  
+  const handleJoinButton = () => {
+    if (!modalRef.current) {
+      return;
+    }
+
+    setActived(!actived);
+
+    modalRef.current.style.display = !actived ? "flex" : "none";
+  }
 
   return (
     <div className="page">
       Привет, я страница, а ты... {user.username}
-      <button
-        onClick={() => {
-          if (!modalRef.current) {
-            return;
-          }
-
-          setActived(!actived);
-
-          modalRef.current.style.display = !actived ? "flex" : "none";
-        }}
-      >Присоединиться</button>
-
+      <button onClick={handleJoinButton}>Присоединиться</button>
       <div
         className={styles.modal}
         style={{display: "none"}}
