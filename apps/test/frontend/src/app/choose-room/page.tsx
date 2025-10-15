@@ -13,19 +13,19 @@ const Page = () => {
   const [ user, setUser ] = useState<User|null>(null);
   const [ token, setToken ] = useState<string|null>(null);
   
-  const [ actived, setActive ] = useState<boolean>(false);
+  const [ actived, setActived ] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
-      const t = await getToken();
+      const gettedToken = await getToken();
 
-      if (!t) {
+      if (!gettedToken) {
         return;
       }
 
-      setToken(t);
-      setUser(await getUser(t));
+      setToken(gettedToken);
+      setUser(await getUser(gettedToken));
     })();
   }, []);
 
@@ -46,7 +46,7 @@ const Page = () => {
             return;
           }
 
-          setActive(!actived);
+          setActived(!actived);
 
           modalRef.current.style.display = !actived ? "flex" : "none";
         }}
