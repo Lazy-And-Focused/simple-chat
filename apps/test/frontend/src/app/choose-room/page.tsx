@@ -8,6 +8,7 @@ import { getToken } from "api/get-token";
 import { getUser } from "api/get-user";
 
 import styles from "./page.module.css";
+import { getRoomPath } from "api/constants";
 
 const Page = () => {
   const [ user, setUser ] = useState<User|null>(null);
@@ -58,11 +59,15 @@ const Page = () => {
         ref={modalRef}
       >
         <div className={styles.input}>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            const id = Object.fromEntries(new FormData(e.currentTarget).entries())["room"];
+          <form onSubmit={(event) => {
+            event.preventDefault();
+            const id = new FormData(event.currentTarget).get("room") as string|null;
 
-            location.href = ("/rooms/" + id);
+            if (!id) {
+              throw new Error("No id");
+            }
+
+            location.href = getRoomPath(id);
           }}>
             <input name="room" type="number" placeholder="Введите номер комнаты" />
             <input type="submit" value={"Присоединиться"} />
