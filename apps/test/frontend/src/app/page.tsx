@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import { authenticate } from "api/authenticate";
 import { CHOOSE_ROOM_PATH } from "api/constants";
 
-import { ModalComponent } from "../components/modal.component";
+import { ModalComponent } from "components/modal.component";
 
 import styles from "./page.module.css";
 

@@ -8,8 +8,9 @@ import { getToken } from "api/get-token";
 import { getUser } from "api/get-user";
 import { getRoomPath } from "api/constants";
 
+import { ModalComponent } from "components/modal.component";
+
 import styles from "./page.module.css";
-import { ModalComponent } from "../../components/modal.component";
 
 const Page = () => {
   const [ user, setUser ] = useState<User|null>(null);
