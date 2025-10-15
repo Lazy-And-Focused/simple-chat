@@ -28,6 +28,7 @@ export default function Home() {
           <div className={styles.input}>
             <form className="auth" onSubmit={(e) => {
               e.preventDefault();
+
               const data = Object.fromEntries(new FormData(e.currentTarget).entries()) as {
                 email: string,
                 password: string,
