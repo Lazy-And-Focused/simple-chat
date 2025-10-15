@@ -9,12 +9,12 @@ import { getUser } from "api/get-user";
 import { getRoomPath } from "api/constants";
 
 import styles from "./page.module.css";
+import { ModalComponent } from "../../components/modal.component";
 
 const Page = () => {
   const [ user, setUser ] = useState<User|null>(null);
   const [ token, setToken ] = useState<string|null>(null);
   
-  const [ actived, setActived ] = useState<boolean>(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,42 +37,36 @@ const Page = () => {
       </div>
     )
   }
-  
-  const handleJoinButton = () => {
-    if (!modalRef.current) {
-      return;
-    }
-
-    setActived(!actived);
-
-    modalRef.current.style.display = !actived ? "flex" : "none";
-  }
 
   return (
     <div className="page">
       Привет, я страница, а ты... {user.username}
-      <button onClick={handleJoinButton}>Присоединиться</button>
-      <div
-        className={styles.modal}
-        style={{display: "none"}}
+      <ModalComponent
         ref={modalRef}
+        summary={"Присоединиться"}
       >
-        <div className={styles.input}>
-          <form onSubmit={(event) => {
-            event.preventDefault();
-            const id = new FormData(event.currentTarget).get("room") as string|null;
+        <div
+          className={styles.modal}
+          style={{display: "none"}}
+          ref={modalRef}
+        >
+          <div className={styles.input}>
+            <form onSubmit={(event) => {
+              event.preventDefault();
+              const id = new FormData(event.currentTarget).get("room") as string|null;
 
-            if (!id) {
-              throw new Error("No id");
-            }
+              if (!id) {
+                throw new Error("No id");
+              }
 
-            location.href = getRoomPath(id);
-          }}>
-            <input name="room" type="number" placeholder="Введите номер комнаты" />
-            <input type="submit" value={"Присоединиться"} />
-          </form>
+              location.href = getRoomPath(id);
+            }}>
+              <input name="room" type="number" placeholder="Введите номер комнаты" />
+              <input type="submit" value={"Присоединиться"} />
+            </form>
+          </div>
         </div>
-      </div>
+      </ModalComponent>
     </div>
   )
 }
