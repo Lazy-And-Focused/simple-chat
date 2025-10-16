@@ -1,3 +1,5 @@
+import json
+
 from typing import Dict
 
 from fastapi import FastAPI, WebSocket
@@ -8,29 +10,32 @@ from database.schemas import UserBase
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: Dict[int, Dict[int, WebSocket]] = {}
+        self.connections: Dict[int, Dict[int, WebSocket]] = {}
 
     async def connect(self, websocket: WebSocket, room_id: int, user_id: int):
         await websocket.accept()
-        if room_id not in self.active_connections:
-            self.active_connections[room_id] = {}
-        self.active_connections[room_id][user_id] = websocket
+
+        if room_id not in self.connections:
+            self.connections[room_id] = {}
+
+        self.connections[room_id][user_id] = websocket
 
     def disconnect(self, room_id: int, user_id: int):
-        if room_id in self.active_connections and user_id in self.active_connections[room_id]:
-            del self.active_connections[room_id][user_id]
-            if not self.active_connections[room_id]:
-                del self.active_connections[room_id]
+        if room_id in self.connections and user_id in self.connections[room_id]:
+            del self.connections[room_id][user_id]
 
-    async def broadcast(self, message: str, room_id: int, user: UserBase):
-        if room_id in self.active_connections:
-            for _, connection in self.active_connections[room_id].items():
-                message_with_class: Dict[str, str|int] = {
-                    "text": message,
-                    "author_id": user.id,
-                    "author": user.username,
-                }
-                await connection.send_json(message_with_class)
+            if not self.connections[room_id]:
+                del self.connections[room_id]
+
+    async def broadcast(self, text: str, room_id: int, user: UserBase):
+        if not room_id in self.connections:
+            return
+        
+        for _, connection in self.connections[room_id].items():
+            await connection.send_json({
+                "text": text,
+                "author": json.dumps(user),
+            })
 
 manager = ConnectionManager()
 
