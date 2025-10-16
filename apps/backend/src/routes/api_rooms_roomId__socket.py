@@ -5,10 +5,11 @@ from typing import Dict
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import JSONResponse
 
-from .tokens import validate, fetchUser
 from database.schemas import UserBase
 
-class ConnectionManager:
+from .tokens import validate, fetchUser
+
+class Connector:
     def __init__(self):
         self.connections: Dict[int, Dict[int, WebSocket]] = {}
 
@@ -37,15 +38,15 @@ class ConnectionManager:
                 "author": json.dumps(user),
             })
 
-manager = ConnectionManager()
+manager = Connector()
 
 def main(app: FastAPI, _):
     @app.websocket("/api/rooms/{room_id}")
     async def execute(websocket: WebSocket, room_id: int):
         token = websocket.query_params.get("authorization")
-        tokenValided = validate(token)
+        token_valided = validate(token)
 
-        if not tokenValided or not token:
+        if not token_valided or not token:
             return JSONResponse("False token", 403)
 
         _, user = fetchUser(token)

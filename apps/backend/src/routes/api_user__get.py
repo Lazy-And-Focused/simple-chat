@@ -7,9 +7,9 @@ def main(app: FastAPI, _):
     @app.get("/api/user")
     def execute(request: Request):
         token = request.headers.get("authorization")
-        tokenValided = validate(token)
+        token_valided = validate(token)
         
-        if not tokenValided or not token:
+        if not token_valided or not token:
             return JSONResponse("False token", 403)
 
         _, user = fetchUser(token)  

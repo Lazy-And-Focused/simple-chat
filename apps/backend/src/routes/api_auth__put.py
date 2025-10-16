@@ -12,9 +12,9 @@ def main(app: FastAPI, _):
     @app.put("/api/auth")
     async def execute(req: Request):
         token = req.headers.get("authorization")
-        tokenValided = validate(token)
+        token_valided = validate(token)
         
-        if not tokenValided or not token:
+        if not token_valided or not token:
             return JSONResponse("False token", 403)
 
         auth = fetch(token)

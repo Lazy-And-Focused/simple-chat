@@ -33,9 +33,9 @@ def authenticateByPassword(req: Request):
 
 def authenticate(req: Request):
     token = req.headers.get("authorization")
-    tokenValided = validate(token)
+    token_valided = validate(token)
     
-    if not tokenValided or not token:
+    if not token_valided or not token:
         return authenticateByPassword(req)
         
     auth = fetch(token)  
@@ -58,9 +58,9 @@ def main(app: FastAPI, _):
         if not code in codes:
             return authenticate(req)
 
-        email, expiresTime = codes[code]
+        email, expires_time = codes[code]
 
-        if expiresTime - int(time.time()) <= 0:
+        if expires_time - int(time.time()) <= 0:
             return JSONResponse("Code expired", 403)
 
         auth = Database(AuthBase).getByKey("email", email)

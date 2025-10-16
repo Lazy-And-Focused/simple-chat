@@ -15,21 +15,20 @@ def fetchUser(token: str) -> tuple[AuthBase, UserBase]:
 
     return auth, user
 
-def generateToken(userId: int, email: str, password: str):
-    emailHash = hash.createHash(email).hex()
-    return emailHash, f"{emailHash}:{hash.createHash(f"{email}{password}{userId}").hex()}"
+def generateToken(user_id: int, email: str, password: str):
+    email_hash = hash.createHash(email).hex()
+    return email_hash, f"{email_hash}:{hash.createHash(f"{email}{password}{user_id}").hex()}"
 
 def validate(token: str|None):
     if token == None:
         return False
     
-    splittedToken = token.split(":")
+    splitted_token = token.split(":")
 
-    if len(splittedToken) != 2:
+    if len(splitted_token) != 2:
         return False
     
-    hash = splittedToken[0]
-
+    hash = splitted_token[0]
     data = Database(AuthBase).getByKey("hash", hash)
 
     if len(data) == 0:
