@@ -1,5 +1,7 @@
 # Super Simpl-Dipl-Papitsquish
 
+[Русский](./README.md) | English
+
 This is a simple chat to help you understand and improve your other programming skills
 
 ## Stack
