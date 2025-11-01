@@ -54,13 +54,10 @@ def main(app: FastAPI):
         await manager.connect(websocket, room_id, user.id)
         
         try:
-            await manager.broadcast(f"Hello, i'm join to chat", room_id, user)
-
             while True:
                 data = await websocket.receive_json()
                 await manager.broadcast(f"{data["text"]}", room_id, user)
         except:
             manager.disconnect(room_id, user.id)
-            await manager.broadcast(f"Goodbye, i'm left from chat", room_id, user)
 
     return execute
