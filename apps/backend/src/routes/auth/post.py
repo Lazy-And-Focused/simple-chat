@@ -4,13 +4,13 @@ from fastapi.responses import JSONResponse
 from database.schemas import AuthBase, UserBase
 from database.session import Database
 
-from .globals import codes
-from . import tokens
+from ..globals import codes
+from .. import tokens
 
 import hash
 import time
 
-def main(app: FastAPI, _):
+def main(app: FastAPI):
     @app.post("/api/auth")
     async def execute(req: Request):
         key = req.headers.get("key")

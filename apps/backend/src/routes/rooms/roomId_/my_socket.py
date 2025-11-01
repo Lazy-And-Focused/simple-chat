@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from database.schemas import UserBase
 
-from .tokens import validate, fetchUser
+from ...tokens import validate, fetchUser
 
 class Connector:
     def __init__(self):
@@ -40,7 +40,7 @@ class Connector:
 
 manager = Connector()
 
-def main(app: FastAPI, _):
+def main(app: FastAPI):
     @app.websocket("/api/rooms/{room_id}")
     async def execute(websocket: WebSocket, room_id: int):
         token = websocket.query_params.get("authorization")

@@ -4,8 +4,8 @@ from fastapi.responses import JSONResponse
 from database.schemas import AuthBase
 from database.session import Database
 
-from .globals import codes
-from .tokens import validate, fetch
+from ..globals import codes
+from ..tokens import validate, fetch
 
 import hash
 import time
@@ -47,7 +47,7 @@ def authenticate(req: Request):
         "email": f"{auth.email}"
     }
 
-def main(app: FastAPI, _):
+def main(app: FastAPI):
     @app.get("/api/auth")
     def execute(req: Request):
         code = req.query_params.get("code")

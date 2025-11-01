@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from .tokens import validate, fetchUser
+from ..tokens import validate, fetchUser
 
-def main(app: FastAPI, _):
+def main(app: FastAPI):
     @app.get("/api/user")
     def execute(request: Request):
         token = request.headers.get("authorization")
