@@ -1,49 +1,49 @@
+from typing import cast
+
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 
 from database.schemas import AuthBase
 from database.session import Database
 
-from ..tokens import validate, fetch, generateToken
+from ..tokens import fetchByRequest, generateToken
 
 import hash
+
+def updateAuth(key: str|None, password: str|None, email: str, auth: AuthBase):
+    hashedPassword: str|None = None
+
+    if password != None and key != None:
+        hashedPassword = hash.hash(key, password)
+    
+    hashData, access_token = generateToken(auth.user_id, email, hashedPassword or auth.password)
+    Database(AuthBase).update(AuthBase(
+        *auth,
+        email=email,
+        hash=hashData,
+        password=(hashedPassword or auth.password),
+        access_token=access_token
+    )) 
+
+    return access_token
 
 def main(app: FastAPI):
     @app.put("/api/auth")
     async def execute(req: Request):
-        token = req.headers.get("authorization")
-        token_valided = validate(token)
-        
-        if not token_valided or not token:
-            return JSONResponse("False token", 403)
+        successed, data = fetchByRequest(req)
 
-        auth = fetch(token)
+        if not successed:
+            return data
+        
+        auth = cast(AuthBase, data)
+
         key = req.headers.get("key")
         password = req.headers.get("password")
         email = req.headers.get("email") or auth.email
 
-        newToken: str
-
         if password:
-            password = hash.hash(key or email, password)
-            hashData, access_token = generateToken(auth.user_id, email, password)
-            newToken = access_token
-            Database(AuthBase).update(AuthBase(
-                *auth,
-                email=email,
-                hash=hashData,
-                password=password,
-                access_token=access_token
-            ))
+            newToken = updateAuth(key or email, password, email, auth)
         else:
-            hashData, access_token = generateToken(auth.user_id, email, auth.password)
-            newToken = access_token
-            Database(AuthBase).update(AuthBase(
-                *auth,
-                email=email,
-                hash=hashData,
-                access_token=access_token
-            ))
+            newToken = updateAuth(email=email, auth=auth, password=None, key=None)
 
         return newToken
     

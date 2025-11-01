@@ -1,3 +1,6 @@
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
 from database.schemas import AuthBase, UserBase
 from database.session import Database
 
@@ -14,6 +17,25 @@ def fetchUser(token: str) -> tuple[AuthBase, UserBase]:
     user = Database(UserBase).getById(auth.user_id)
 
     return auth, user
+
+def fetchByRequest(request: Request) -> tuple[bool, JSONResponse | AuthBase]:
+    token = request.headers.get("authorization")
+    token_valided = validate(token)
+
+    if not token_valided or not token:
+        return (False, JSONResponse("False token", 403))
+    
+    return (True, fetch(token))
+
+def fetchUserByRequest(request: Request) -> tuple[bool, JSONResponse | tuple[AuthBase, UserBase]]:
+    token = request.headers.get("authorization")
+    token_valided = validate(token)
+
+    if not token_valided or not token:
+        return (False, JSONResponse("False token", 403))
+    
+    return (True, fetchUser(token))
+
 
 def generateToken(user_id: int, email: str, password: str):
     email_hash = hash.createHash(email).hex()

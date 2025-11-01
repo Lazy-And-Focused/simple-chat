@@ -5,10 +5,12 @@ from database.schemas import AuthBase, UserBase
 from database.session import Database
 
 from ..globals import codes
-from .. import tokens
+from ..tokens import generateToken
 
 import hash
 import time
+
+FIVE_MINUTES = 5 * 60 * 1000
 
 def main(app: FastAPI):
     @app.post("/api/auth")
@@ -27,16 +29,22 @@ def main(app: FastAPI):
 
         password = hash.hash(key or email, password)
 
-        if (len(Database(AuthBase).getByKey("email", email)) != 0):
+        exists = len(Database(AuthBase).getByKey("email", email)) != 0
+        if (exists):
             return JSONResponse("already created", 409)
+
+        avatar_url = user["avatar_url"] if "avatar_url" in user else ""
+        name = user["name"] if "name" in user else ""
 
         Database(UserBase).create(UserBase(
             username=user["username"],
-            avatar_url=(user["avatar_url"] if "avatar_url" in user else ""),
-            name=(user["name"] if "name" in user else "")
-        )) # type: ignore
+            avatar_url=avatar_url,
+            name=name
+        ))
+
         databaseUser = Database(UserBase).getByKey("username", user["username"])[0]
-        hashData, access_token = tokens.generateToken(databaseUser.id, email, password)
+        hashData, access_token = generateToken(databaseUser.id, email, password)
+
         Database(AuthBase).create(AuthBase(
             user_id=databaseUser.id,
             email=email,
@@ -46,7 +54,7 @@ def main(app: FastAPI):
         ))
 
         code = int(time.time())
-        codes[str(code)] = (email, code + 5 * 60 * 1000) # 5 minutes
+        codes[str(code)] = (email, code + FIVE_MINUTES)
 
         return code
     
