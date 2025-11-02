@@ -5,9 +5,9 @@ import Footer from "~/components/footer.vue";
 </script>
 
 <template>
+  <NuxtRouteAnnouncer />
+  
   <div class="app">
-    <NuxtRouteAnnouncer />
-
     <Header />
 
     <div class="app-content">
