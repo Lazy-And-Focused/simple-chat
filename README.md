@@ -9,12 +9,6 @@
 - Бэкенд часть этого приложения написана на языке программирования Python, а используемый фреймворк — FastAPI
 - Фронтенд написан на TypeScript и использует Vue и Nuxt
 
-## Авторство
-
-- Команда: [Lazy And Focused](https://github.com/Lazy-And-Focused)
-- Бэкенд: [FOCKUSTY](https://github.com/fockusty)
-- Фронтенд: [lanvalird](https://github.com/lanvalird)
-
 ## Цели
 
 Приложение сделано с целью изучить новые технология для совершенствования знаний
