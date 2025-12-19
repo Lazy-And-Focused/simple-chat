@@ -13,4 +13,6 @@ This is a simple chat that will help us understand and improve our other program
 
 This application is designed to explore new technologies to improve ours knowledge
 
-- [Link to Credits](./credits.md)
+## Many things
+
+- [Credits](./credits.md)
