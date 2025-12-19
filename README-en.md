@@ -11,4 +11,6 @@ This is a simple chat that will help us understand and improve our other program
 
 ## Goals
 
-This application is designed to explore new technologies to improve your knowledge
+This application is designed to explore new technologies to improve ours knowledge
+
+- [Link to Credits](./credits.md)
